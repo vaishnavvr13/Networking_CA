@@ -1,0 +1,35 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Create app directory if it doesn't exist
+            mkdir -p ~/webapp
+            
+            # Copy application files
+            cp -r ${{ github.workspace }}/* ~/webapp/
+            
+            # Build and run Docker container
+            cd ~/webapp
+            sudo docker build -t webapp .
+            sudo docker stop webapp || true
+            sudo docker rm webapp || true
+            sudo docker run -d --name webapp -p 80:80 webapp

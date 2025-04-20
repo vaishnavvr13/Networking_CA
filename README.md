@@ -1,8 +1,8 @@
-﻿# Azure Docker Web Application
+# AWS Docker Web Application
 
 ## Project Overview
 
-This project demonstrates a complete CI/CD pipeline for deploying a containerized web application to Azure using:
+This project demonstrates a basic CI/CD pipeline for deploying a containerized web application to AWS using:
 
 - Terraform for infrastructure provisioning
 - Docker for containerization
@@ -10,37 +10,54 @@ This project demonstrates a complete CI/CD pipeline for deploying a containerize
 
 ## Key Components
 
-- Cloud Platform: Microsoft Azure
+- Cloud Platform: Amazon Web Services (AWS)
 - Infrastructure as Code: Terraform
 - Containerization: Docker
 - CI/CD: GitHub Actions
 - Web Server: Nginx
 
+## Infrastructure Components
+
+- VPC with a public subnet
+- Internet Gateway for public access
+- EC2 instance in public subnet
+- Security group allowing HTTP and SSH access
+
 ## Project Structure
 
--     erraform/: Terraform configuration files for Azure infrastructure
+- terraform/: Terraform configuration files for AWS infrastructure
 - webapp/: Web application source files
-  - index.html: Simple web page
-  - Dockerfile: Docker configuration for the web app
+- Dockerfile: Docker configuration for the web app
 - .github/workflows/: GitHub Actions workflow for automated deployment
-
-## Deployment Process
-
-1. Terraform creates an Azure VM with necessary network configurations
-2. Docker containerizes the web application
-3. GitHub Actions automatically builds and deploys the container to the VM
 
 ## Prerequisites
 
-- Azure account
-- GitHub account
-- Terraform
-- Docker
-- GitHub Actions
+1. AWS Account
+2. GitHub Account
+3. Terraform installed locally
+4. AWS CLI configured with credentials
 
-## How to Reproduce
+## Deployment Steps
 
 1. Clone the repository
-2. Set up Azure credentials
-3. Configure GitHub Secrets
-4. Push changes to trigger automatic deployment
+2. Configure AWS credentials:
+   ```bash
+   aws configure
+   ```
+3. Initialize and apply Terraform:
+   ```bash
+   cd terraform
+   terraform init
+   terraform apply
+   ```
+4. Add GitHub Secrets:
+   - EC2_HOST: Public IP of the EC2 instance
+   - SSH_PRIVATE_KEY: SSH private key for EC2 access
+
+5. Push changes to trigger automatic deployment
+
+## Security Notes
+
+- The EC2 instance is placed in a public subnet for simplicity
+- Security group allows inbound HTTP (80) and SSH (22) access
+- Basic setup suitable for development and learning purposes
